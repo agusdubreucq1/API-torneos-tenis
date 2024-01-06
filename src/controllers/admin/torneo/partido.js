@@ -5,7 +5,6 @@ import Torneo from "../../../models/torneo.js";
 export const partido_controller = {
   get_partidos: async (req, res) => {
     const { idTorneo } = req.params;
-    console.log(idTorneo);
     try {
       const partidos = await Partido.findAll({
         where: {

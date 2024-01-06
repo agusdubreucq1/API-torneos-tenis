@@ -22,7 +22,6 @@ export const login_controller = {
   },
   login: async (req, res) => {
     const { username, password } = req.body;
-    console.log(username, password)
     if (req.user) return res.status(200).json(req.user);
     try {
       const user = await User.findOne({ where: { username } });

@@ -9,7 +9,6 @@ export const cors = (req, res, next)=>{
     console.log(origin)
 	if(ACCEPTED_ORIGINS.includes(origin) || !origin){
 		res.header('Access-Control-Allow-Origin',origin);
-        console.log('lo deje pasar')
 	}
 	next();
 }

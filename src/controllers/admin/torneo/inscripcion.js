@@ -5,7 +5,6 @@ export const inscripcion_controller = {
 
     get_inscripciones: async (req, res) => {
         const { idTorneo } = req.params;
-        console.log(idTorneo)
         try {
             const inscripciones = await Torneo.findAll({
                 where: { id: idTorneo },
@@ -19,7 +18,6 @@ export const inscripcion_controller = {
     },
     create_inscripcion: async (req, res) => {
         const { idTorneo } = req.params;
-        console.log(idTorneo)
         try {
             const torneo = await Torneo.findByPk(idTorneo);
             await torneo.addJugador(Number(req.body.id_jugador));
