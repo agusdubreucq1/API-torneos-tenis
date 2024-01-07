@@ -9,6 +9,7 @@ router.get("/", torneo_controller.get_torneos);
 router.get("/:id", torneo_controller.get_torneo_by_id);
 router.post("/", torneo_controller.create_torneo);
 router.put("/:id", torneo_controller.update_torneo);
+router.delete("/:id", torneo_controller.delete_torneo);
 
 router.use("/", router_partido);
 router.use("/", router_inscripcion);

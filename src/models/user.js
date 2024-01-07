@@ -11,11 +11,18 @@ export const User = sequelize.define('user', {
     dni:{
         type: DataTypes.INTEGER
     },
-    username: {
+    nombre: {
+        type: DataTypes.TEXT
+    },
+    apellido:{
         type: DataTypes.TEXT
     },
     password: {
         type: DataTypes.TEXT
+    },
+    isAdmin:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 })
 

@@ -39,9 +39,19 @@ export const partido_controller = {
   },
   create_partido: async (req, res) => {
     const { idTorneo } = req.params;
+    const {resultado, ronda, fecha, pareja1, pareja2, ganador} = req.body
+
     try {
-      req.body.torneoId = idTorneo;
-      const partido = await Partido.create(req.body);
+      const jugador1 = await Jugador.findByPk(pareja1);
+      const jugador2 = await Jugador.findByPk(pareja2);
+      if(!jugador1 || !jugador2){
+        return res.status(404).json({ error: "Jugador no encontrado" });
+      }
+      const torneo = await Torneo.findByPk(idTorneo);
+      if(!torneo){
+        return res.status(404).json({ error: "Torneo no encontrado" });
+      }
+      const partido = await Partido.create({ resultado, ronda, fecha, torneoId: idTorneo, pareja1, pareja2, ganador});
       res.json(partido);
     } catch (e) {
       res.status(500).json({ error: "Internal Server Error" });

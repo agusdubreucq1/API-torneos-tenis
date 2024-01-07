@@ -39,4 +39,16 @@ export const torneo_controller = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+  delete_torneo: async (req, res) => {
+    try {
+      const torneo = await Torneo.findByPk(req.params.id);
+      if(!torneo) {
+        return res.status(404).json({ error: "Torneo no encontrado" });
+      }
+      await torneo.destroy();
+      res.json(torneo);
+    } catch (error) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
 };
