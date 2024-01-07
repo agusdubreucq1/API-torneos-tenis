@@ -1,3 +1,4 @@
+import { ESTADO } from "../../../../constantes.js";
 import Torneo from "../../../models/torneo.js";
 
 export const torneo_controller = {
@@ -20,8 +21,10 @@ export const torneo_controller = {
     }
   },
   create_torneo: async (req, res) => {
+    const body = {...req.body, estado: ESTADO.ABIERTO};
+    console.log(body)
     try {
-      const torneo = await Torneo.create(req.body);
+      const torneo = await Torneo.create(body);
       res.json(torneo);
     } catch (e) {
       res.status(500).json({ error: "Internal Server Error" });

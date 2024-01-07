@@ -11,6 +11,12 @@ const Torneo = sequelize.define('torneo', {
     nombre: {
         type: DataTypes.TEXT
     },
+    estado: {
+        type: DataTypes.TEXT
+    },
+    descripcion: {
+        type: DataTypes.TEXT
+    },
     fecha: {
         type: DataTypes.DATE
     },

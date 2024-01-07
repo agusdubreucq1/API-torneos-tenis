@@ -21,7 +21,7 @@ app.options('*', corsOptions);
 
 const PORT = process.env.PORT || 3000;
 
-app.use("/", router_main)
+app.use("/", router_main);
 app.use("/admin/torneo", isLoggedIn, router_torneo);
 app.use("/admin/jugador", isLoggedIn, router_jugador);
 app.use('/', router_login);
