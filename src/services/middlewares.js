@@ -4,20 +4,24 @@ import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 config();
 
-
-
 export const isLoggedIn = (req, res, next) => {
-    let token = req.headers.authorization;
-    token = token?.replace('Bearer ', '');
+  let token = req.headers.authorization;
+  token = token?.replace("Bearer ", "");
 
+  if (token == null) return res.status(403).json({ message: "No tenes los permisos" });
 
-    if(token == null) return res.status(403).json({message: "No tenes los permisos"});
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: "No tenes los permisos", error: "no tienes los permisos" });
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if(err) return res.status(403).json({message: "No tenes los permisos", error: "no tienes los permisos"});
+    req.user = { ...user, password: "" };
+    next();
+  });
+};
 
-        req.user = {...user, password: ""};
-        next();
-    });
-
-}
+export const isAdmin = (req, res, next) => {
+    console.log(req.user)
+  if (req.user.user.isAdmin) next();
+  else {
+    return res.status(403).json({ message: "No sos admin" });
+  }
+};
