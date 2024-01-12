@@ -1,3 +1,4 @@
+import { createError } from "../../../../constantes.js";
 import Jugador from "../../../models/jugador.js";
 import Torneo from "../../../models/torneo.js";
 
@@ -11,12 +12,12 @@ export const inscripcion_controller = {
         include: Jugador,
       });
       if (!inscripciones) {
-        return res.status(404).json({ error: "Torneo no encontrado" });
+        return res.status(404).json(createError("Torneo no encontrado"));
       }
       res.json(inscripciones);
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "Internal Server Error, al obtener las inscripciones", error_message: error });
+      res.status(500).json(createError("Error al obtener las inscripciones"));
     }
   },
   create_inscripcion: async (req, res) => {
@@ -25,16 +26,16 @@ export const inscripcion_controller = {
     try {
       const jugador = await Jugador.findByPk(id_jugador);
       if (!jugador) {
-        return res.status(404).json({ error: "Jugador no encontrado" });
+        return res.status(404).json(createError("Jugador no encontrado"));
       }
       const torneo = await Torneo.findByPk(idTorneo);
       if (!torneo) {
-        return res.status(404).json({ error: "Torneo no encontrado" });
+        return res.status(404).json(createError("Torneo no encontrado"));
       }
       await torneo.addJugador(Number(req.body.id_jugador));
       res.json(torneo);
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json(createError("Internal Server Error"));
       console.log(error);
     }
   },
@@ -45,7 +46,7 @@ export const inscripcion_controller = {
       torneo.removeJugador(req.body.id_jugador);
       res.json(inscripcion);
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json(createError("Internal Server Error"));
     }
   },
 };

@@ -9,3 +9,7 @@ export const ESTADO={
     "COMPLETADO": "Completado",
     "SUSPENDIDO": "Suspendido",
 }
+
+export const createError = (message) => {
+    return {error : message}
+}

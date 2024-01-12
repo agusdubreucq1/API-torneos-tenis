@@ -14,7 +14,7 @@ export const isLoggedIn = (req, res, next) => {
     if(token == null) return res.status(403).json({message: "No tenes los permisos"});
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if(err) return res.sendStatus(403);
+        if(err) return res.status(403).json({message: "No tenes los permisos", error: "no tienes los permisos"});
 
         req.user = {...user, password: ""};
         next();

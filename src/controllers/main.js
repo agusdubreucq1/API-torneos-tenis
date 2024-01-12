@@ -1,3 +1,4 @@
+import { createError } from "../../constantes.js";
 import Torneo from "../models/torneo.js";
 
 
@@ -12,7 +13,7 @@ export const main_controller = {
       res.json(torneos);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Error al obtener los torneos" });
+      res.status(500).json(createError("error al obtener los torneos"));
     }
   }
 }

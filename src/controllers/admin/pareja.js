@@ -1,3 +1,4 @@
+import { createError } from "../../../constantes";
 import Pareja from "../../models/pareja";
 
 export const pareja_controller = {
@@ -6,7 +7,7 @@ export const pareja_controller = {
             const parejas = await Pareja.findAll();
             res.json(parejas);
         } catch (error) {
-            res.status(500).json({ error: "Internal Server Error" });
+            res.status(500).json(createError("Internal Server Error"));
         }
     },
     get_pareja_by_id: async (req, res) => {
@@ -14,7 +15,7 @@ export const pareja_controller = {
             const pareja = await Pareja.findByPk(req.params.id);
             res.json(pareja);
         } catch (error) {
-            res.status(500).json({ error: "Internal Server Error" });
+            res.status(500).json(createError("Internal Server Error"));
         }
     },
     update_pareja: async (req, res) => {
@@ -23,7 +24,7 @@ export const pareja_controller = {
             await pareja.update(req.body);
             res.json(pareja);
         } catch (error) {
-            res.status(500).json({ error: "Internal Server Error" });
+            res.status(500).json(createError("Internal Server Error"));
         }
     },
     create_pareja: async (req, res) => {
@@ -31,7 +32,7 @@ export const pareja_controller = {
             const pareja = await Pareja.create(req.body);
             res.json(pareja);
         } catch (error) {
-            res.status(500).json({ error: "Internal Server Error" });
+            res.status(500).json(createError("Internal Server Error"));
         }
     }
 }

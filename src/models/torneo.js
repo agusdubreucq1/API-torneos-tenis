@@ -8,6 +8,9 @@ const Torneo = sequelize.define('torneo', {
         primaryKey: true,
         autoIncrement: true
     },
+    cant_jugadores: {
+        type: DataTypes.INTEGER
+    },
     nombre: {
         type: DataTypes.TEXT
     },

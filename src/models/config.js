@@ -5,9 +5,15 @@ import { User } from './user.js';
 import sequelize from './conexion.js';
 
 Partido.belongsTo(Torneo)
+
 Jugador.belongsTo(User)
+
+Torneo.belongsToMany(User, { through: 'torneo_admin' })
+User.belongsToMany(Torneo, { through: 'torneo_admin' })
+
 Torneo.belongsToMany(Jugador, { through: 'torneo_jugador' })
 Jugador.belongsToMany(Torneo, { through: 'torneo_jugador' })
+
 Jugador.belongsToMany(Partido, { through: 'partido_jugador' });
 Partido.belongsTo(Jugador, {
     foreignKey: "pareja1",

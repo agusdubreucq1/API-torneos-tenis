@@ -8,8 +8,14 @@ const Partido = sequelize.define("partido", {
         primaryKey: true,
         autoIncrement: true
     },
+    orden:{
+        type: DataTypes.INTEGER
+    },
     resultado: {
         type: DataTypes.TEXT
+    },
+    jugadoresXRonda:{
+        type: DataTypes.INTEGER
     },
     ronda:{
         type: DataTypes.TEXT
