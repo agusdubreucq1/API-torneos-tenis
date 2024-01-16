@@ -23,6 +23,9 @@ export const partido_controller = {
         ],
         
       });
+      if (!partidos || partidos.length === 0) {
+        return res.status(404).json(createError("Torneo no encontrado"));
+      }
       res.json(partidos);
     } catch (e) {
       res.status(500).json(createError("Internal Server Error"));
@@ -41,6 +44,9 @@ export const partido_controller = {
   create_partido: async (req, res) => {
     const { idTorneo } = req.params;
     const { resultado, ronda, fecha, pareja1, pareja2, ganador, orden, jugadoresXRonda} = req.body
+    if(!pareja1 || !pareja2 || !jugadoresXRonda || !orden){
+      return res.status(400).json(createError("Faltan campos obligatorios obligatorios"));
+    }
 
     try {
       const jugador1 = await Jugador.findByPk(pareja1);
@@ -68,4 +74,18 @@ export const partido_controller = {
       res.status(500).json(createError("Internal Server Error"));
     }
   },
+  delete_partido: async (req, res) => {
+    const { id } = req.params;
+    try{
+      const partido = await Partido.findByPk(id);
+      if(!partido){
+        return res.status(404).json(createError("Partido no encontrado"));
+      }
+      await partido.destroy();
+      res.json(partido);
+    }catch(e){
+      console.log(e)
+      res.status(500).json(createError("Internal Server Error"));
+    }
+  }
 };

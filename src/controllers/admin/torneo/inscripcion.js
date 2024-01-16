@@ -1,6 +1,7 @@
 import { createError } from "../../../../constantes.js";
 import Jugador from "../../../models/jugador.js";
 import Torneo from "../../../models/torneo.js";
+import { User } from "../../../models/user.js";
 
 export const inscripcion_controller = {
   get_inscripciones: async (req, res) => {
@@ -9,8 +10,9 @@ export const inscripcion_controller = {
       const inscripciones = await Torneo.findOne({
         where: { id: idTorneo },
         attributes: { exclude: ["id", "nombre", "lugar", "descripcion", "fecha", "estado", "categoria"] },
-        include: Jugador,
+        include: {model: Jugador, as: "jugadores", attributes: {exclude: ["torneo_jugador"]}, through: {attributes: []}, include: { model: User, attributes: ["nombre", "apellido", "dni"] }},
       });
+
       if (!inscripciones) {
         return res.status(404).json(createError("Torneo no encontrado"));
       }
@@ -32,7 +34,8 @@ export const inscripcion_controller = {
       if (!torneo) {
         return res.status(404).json(createError("Torneo no encontrado"));
       }
-      await torneo.addJugador(Number(req.body.id_jugador));
+      console.log(torneo, jugador, idTorneo, id_jugador)
+      await torneo.addJugadores(Number(req.body.id_jugador));
       res.json(torneo);
     } catch (error) {
       res.status(500).json(createError("Internal Server Error"));

@@ -11,8 +11,8 @@ Jugador.belongsTo(User)
 Torneo.belongsToMany(User, { through: 'torneo_admin' })
 User.belongsToMany(Torneo, { through: 'torneo_admin' })
 
-Torneo.belongsToMany(Jugador, { through: 'torneo_jugador' })
-Jugador.belongsToMany(Torneo, { through: 'torneo_jugador' })
+Torneo.belongsToMany(Jugador, { through: 'torneo_jugador', as: 'jugadores' })
+Jugador.belongsToMany(Torneo, { through: 'torneo_jugador', as: 'torneos' })
 
 Jugador.belongsToMany(Partido, { through: 'partido_jugador' });
 Partido.belongsTo(Jugador, {

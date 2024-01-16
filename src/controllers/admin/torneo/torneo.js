@@ -16,6 +16,9 @@ export const torneo_controller = {
   get_torneo_by_id: async (req, res) => {
     try {
       const torneo = await Torneo.findByPk(req.params.id);
+      if (!torneo) {
+        return res.status(404).json(createError("Torneo no encontrado"));
+      }
       res.json(torneo);
     } catch (error) {
       res.status(500).json(createError("Error al obtener el torneo"));
@@ -35,21 +38,13 @@ export const torneo_controller = {
       await torneo.addUser(user_id);
       res.json(torneo);
     } catch (e) {
+      console.log(e)
       res.status(500).json(createError("Internal Server Error"));
     }
   },
   update_torneo: async (req, res) => {
-    try {
-      const torneo = await Torneo.findOne({
-        where: { id: req.params.id },
-        include: { model: User, attributes: ["nombre", "apellido", "dni", "id"] },
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-      });
-      if(!torneo.users.map(user => user.id).includes(req.user.user.id)){
-        return res.status(400).json(createError("No puedes modificar un torneo que no te pertenece"))
-      }
-
-      await torneo.update(req.body);
+    try{
+      let torneo = await req.torneo.update(req.body);
       res.json(torneo);
     } catch (error) {
       res.status(500).json(createError("Internal Server Error"));
@@ -57,12 +52,8 @@ export const torneo_controller = {
   },
   delete_torneo: async (req, res) => {
     try {
-      const torneo = await Torneo.findByPk(req.params.id);
-      if (!torneo) {
-        return res.status(404).json(createError("Torneo no encontrado"));
-      }
-      await torneo.destroy();
-      res.json(torneo);
+      await req.torneo.destroy();
+      res.json(req.torneo);
     } catch (error) {
       res.status(500).json(createError("Internal Server Error"));
     }

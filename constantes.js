@@ -5,9 +5,9 @@ export const CATEGORIAS={
 }
 
 export const ESTADO={
-    "ABIERTO": "Abierto",
-    "COMPLETADO": "Completado",
-    "SUSPENDIDO": "Suspendido",
+    "ABIERTO": "ABIERTO",
+    "COMPLETADO": "COMPLETADO",
+    "SUSPENDIDO": "SUSPENDIDO",
 }
 
 export const createError = (message) => {

@@ -21,7 +21,7 @@ const Torneo = sequelize.define('torneo', {
         type: DataTypes.TEXT
     },
     fecha: {
-        type: DataTypes.DATE
+        type: DataTypes.DATEONLY
     },
     lugar: {
         type: DataTypes.TEXT
