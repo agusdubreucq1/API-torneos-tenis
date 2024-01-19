@@ -39,7 +39,7 @@ export const login_controller = {
       }
 
       const token = sign({ user }, process.env.JWT_SECRET);
-      res.send({ message: "Inicio de sesión exitoso", user: { token, username: user.nombre, dni: user.dni, isAdmin: user.isAdmin } });
+      res.send({ message: "Inicio de sesión exitoso", user: { token, nombre: user.nombre, apellido: user.apellido, dni: user.dni, isAdmin: user.isAdmin } });
     } catch (e) {
       res.status(500).json(createError("Internal Server Error"));
       console.log(e)
