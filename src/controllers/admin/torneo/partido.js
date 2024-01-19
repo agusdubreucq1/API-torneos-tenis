@@ -19,10 +19,9 @@ export const partido_controller = {
         include: [
           { model: Jugador, as: "Pareja1", include: { model: User, attributes: ["nombre", "apellido", "dni"] } }, // Usa el alias que definiste en la asociación
           { model: Jugador, as: "Pareja2", include: { model: User, attributes: ["nombre", "apellido", "dni"] } },
-          // { model: Jugador, as: "Ganador", include: { model: User, attributes: ["nombre", "apellido", "dni"] } },
         ],
       });
-      if (!partidos || partidos.length === 0) {
+      if (!partidos) {
         return res.status(404).json(createError("Torneo no encontrado"));
       }
       res.json(partidos);
@@ -35,6 +34,9 @@ export const partido_controller = {
     const { idTorneo, id } = req.params;
     try {
       const partido = await Partido.findByPk(id);
+      if (!partido) {
+        return res.status(404).json(createError("Partido no encontrado"));
+      }
       res.json(partido);
     } catch (e) {
       res.status(500).json(createError("Internal Server Error"));
@@ -42,7 +44,7 @@ export const partido_controller = {
   },
   create_partido: async (req, res) => {
     const { idTorneo } = req.params;
-    const { resultado, ronda, fecha, pareja1, pareja2, ganador, orden, jugadoresXRonda } = req.body;
+    const { orden, jugadoresXRonda } = req.body;
 
     try {
       await partidoSchema.parseAsync(req.body);
@@ -74,6 +76,13 @@ export const partido_controller = {
   },
   update_partido: async (req, res) => {
     const { id } = req.params;
+    try{
+      await partidoSchema.parseAsync(req.body);
+    } catch (e) {
+      console.log(e);
+      return res.status(400).json(createError(e.issues[0].message));
+    }
+
     try {
       const partido = await Partido.findByPk(id);
       await partido.update(req.body);
