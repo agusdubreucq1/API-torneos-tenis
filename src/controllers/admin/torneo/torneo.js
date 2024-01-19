@@ -1,6 +1,8 @@
 import { ESTADO, createError } from "../../../../constantes.js";
+import sequelize from "../../../models/conexion.js";
 import Torneo from "../../../models/torneo.js";
 import { User } from "../../../models/user.js";
+import { torneoSchema } from "../../../schemas/torneo.js";
 
 export const torneo_controller = {
   get_torneos: async (_req, res) => {
@@ -25,19 +27,24 @@ export const torneo_controller = {
     }
   },
   create_torneo: async (req, res) => {
-    const { nombre, fecha, categoria, cant_jugadores } = req.body;
-    if (!nombre || !fecha || !categoria) {
-      return res.status(400).json(createError("Todos los campos son obligatorios"));
+    try{
+      torneoSchema.parse(req.body);
+    } catch (e) {
+      console.log(e)
+      return res.status(400).json(createError(e.issues[0].message));
     }
     const body = { ...req.body, estado: ESTADO.ABIERTO };
-    console.log(body);
+    console.log('body: ',body);
+    const t = await sequelize.transaction();
     try {
-      const torneo = await Torneo.create(body);
+      const torneo = await Torneo.create(body, {transaction: t});
       const user_id = req.user.user.id;
       console.log(req.user.user.id);
-      await torneo.addUser(user_id);
+      await torneo.addUser(user_id, {transaction: t});
+      await t.commit();
       res.json(torneo);
     } catch (e) {
+      await t.rollback();
       console.log(e)
       res.status(500).json(createError("Internal Server Error"));
     }

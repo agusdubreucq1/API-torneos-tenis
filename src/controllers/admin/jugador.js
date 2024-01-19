@@ -1,8 +1,10 @@
-import { Op } from "sequelize";
+import { Op, Transaction } from "sequelize";
 import { createError } from "../../../constantes.js";
 import Jugador from "../../models/jugador.js";
 import Partido from "../../models/partido.js";
 import { User } from "../../models/user.js";
+import { jugadorSchema } from "../../schemas/jugador.js";
+import sequelize from "../../models/conexion.js";
 
 export const jugador_controller = {
   get_jugadores: async (_req, res) => {
@@ -20,19 +22,20 @@ export const jugador_controller = {
   },
   create_jugador: async (req, res) => {
     const { nombre, apellido, dni } = req.body;
-    console.log(req.body)
-    if (!nombre || !apellido || !dni) {
-      return res.status(400).json(createError("Todos los campos son obligatorios"));
+    try{
+      await jugadorSchema.parseAsync(req.body)
+    } catch(e){
+      return res.status(400).json(createError(e.issues[0].message))
     }
-    
+
+    const t = await sequelize.transaction();
     try {
-      const user = await User.findOne({ where: { dni } });
-      if (user) return res.status(400).json(createError("El usuario ya existe"));
-      
-      const newUser = await User.create({ nombre, apellido, dni, password: dni, isAdmin: false });
-      const jugador = await Jugador.create({ userId: newUser.id });
+      const newUser = await User.create({ nombre, apellido, dni, password: dni, isAdmin: false }, {transaction: t});
+      const jugador = await Jugador.create({ userId: newUser.id }, {transaction: t});
+      await t.commit();
       res.json(jugador);
     } catch (e) {
+      await t.rollback();
       console.log(e)
       res.status(500).json(createError("Internal Server Error"));
     }
