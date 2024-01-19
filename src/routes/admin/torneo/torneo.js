@@ -8,6 +8,7 @@ const router = Router();
 
 router.get("/", torneo_controller.get_torneos);
 router.get("/:id", torneo_controller.get_torneo_by_id);
+
 router.post("/", isAdmin, torneo_controller.create_torneo);
 router.put("/:idTorneo",isAdmin, isAdminOfTorneo, torneo_controller.update_torneo);
 router.delete("/:idTorneo",isAdmin, isAdminOfTorneo, torneo_controller.delete_torneo);
