@@ -19,7 +19,7 @@ export const partido_controller = {
         include: [
           { model: Jugador, as: "Pareja1", include: { model: User, attributes: ["nombre", "apellido", "dni"] } }, // Usa el alias que definiste en la asociación
           { model: Jugador, as: "Pareja2", include: { model: User, attributes: ["nombre", "apellido", "dni"] } },
-          { model: Jugador, as: "Ganador", include: { model: User, attributes: ["nombre", "apellido", "dni"] } },
+          // { model: Jugador, as: "Ganador", include: { model: User, attributes: ["nombre", "apellido", "dni"] } },
         ],
         
       });
@@ -45,9 +45,10 @@ export const partido_controller = {
     const { idTorneo } = req.params;
     const { resultado, ronda, fecha, pareja1, pareja2, ganador, orden, jugadoresXRonda} = req.body
     if(!pareja1 || !pareja2 || !jugadoresXRonda || !orden){
+      console.log(req.body)
       return res.status(400).json(createError("Faltan campos obligatorios obligatorios"));
     }
-
+    
     try {
       const jugador1 = await Jugador.findByPk(pareja1);
       const jugador2 = await Jugador.findByPk(pareja2);
