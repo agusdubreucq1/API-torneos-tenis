@@ -17,14 +17,8 @@ const Partido = sequelize.define("partido", {
     jugadoresXRonda:{
         type: DataTypes.INTEGER
     },
-    ronda:{
-        type: DataTypes.TEXT
-    },
     fecha: {
-        type: DataTypes.DATE
-    },
-    torneo_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.DATEONLY
     },
     pareja1:{
         type: DataTypes.INTEGER
