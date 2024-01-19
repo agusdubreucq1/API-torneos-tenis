@@ -1,7 +1,9 @@
+import { Op, Sequelize } from "sequelize";
 import { createError } from "../../../../constantes.js";
 import Jugador from "../../../models/jugador.js";
 import Torneo from "../../../models/torneo.js";
 import { User } from "../../../models/user.js";
+import sequelize from "../../../models/conexion.js";
 
 export const inscripcion_controller = {
   get_inscripciones: async (req, res) => {
@@ -20,6 +22,31 @@ export const inscripcion_controller = {
     } catch (error) {
       console.log(error);
       res.status(500).json(createError("Error al obtener las inscripciones"));
+    }
+  },
+  getJugadoresNoInscritos: async (req, res) => {
+    const {idTorneo} = req.params;
+    try{
+      const torneo = await Torneo.findByPk(idTorneo);
+      if(!torneo){
+        return res.status(404).json(createError("Torneo no encontrado"));
+      }
+      const jugadoresInscritos = await sequelize.query(`(SELECT jugadorId FROM torneo_jugador WHERE torneoId = :idTorneo)`, { replacements: { idTorneo: idTorneo} })
+      // console.log('jugadoresInscritos: ',jugadoresInscritos)
+
+      const ids = jugadoresInscritos[0].map(j => j.jugadorId);
+      const jugadoresNoInscritos = await Jugador.findAll({
+        where: {
+          id: {
+            [Op.notIn]: ids
+          }
+        },
+        include: { model: User, attributes: ["nombre", "apellido", "dni"] }
+      });
+      res.json(jugadoresNoInscritos);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(createError("Error al obtener los jugadores no inscritos"));
     }
   },
   create_inscripcion: async (req, res) => {

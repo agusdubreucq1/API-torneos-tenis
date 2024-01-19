@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { inscripcion_controller } from "../../../controllers/admin/torneo/inscripcion.js";
+import { isLoggedIn } from "../../../services/middlewares.js";
 
 const router = Router();
 
 router.get("/:idTorneo/inscripciones", inscripcion_controller.get_inscripciones);
-router.post("/:idTorneo/inscripciones", inscripcion_controller.create_inscripcion);
-router.delete("/:idTorneo/inscripciones/:id", inscripcion_controller.delete_inscripcion);
+router.get("/:idTorneo/jugadoresNoInscriptos", inscripcion_controller.getJugadoresNoInscritos);
+router.post("/:idTorneo/inscripciones", isLoggedIn, inscripcion_controller.create_inscripcion);
+router.delete("/:idTorneo/inscripciones/:id", isLoggedIn, inscripcion_controller.delete_inscripcion);
 
 export default router
