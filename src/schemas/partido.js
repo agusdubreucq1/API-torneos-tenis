@@ -1,7 +1,7 @@
 import { z } from "zod";
 import Jugador from "../models/jugador.js";
 
-function esPotenciaDe2(n) {
+export function esPotenciaDe2(n) {
     if (n === 0) {
       return false;
     }

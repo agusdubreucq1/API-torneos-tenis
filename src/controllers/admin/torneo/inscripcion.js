@@ -4,6 +4,7 @@ import Jugador from "../../../models/jugador.js";
 import Torneo from "../../../models/torneo.js";
 import { User } from "../../../models/user.js";
 import sequelize from "../../../models/conexion.js";
+import { inscripcionSchema } from "../../../schemas/inscripcion.js";
 
 export const inscripcion_controller = {
   get_inscripciones: async (req, res) => {
@@ -52,17 +53,28 @@ export const inscripcion_controller = {
   create_inscripcion: async (req, res) => {
     const { idTorneo } = req.params;
     const { id_jugador } = req.body;
+    try{
+      await inscripcionSchema.parseAsync(req.body);
+    } catch (e) {
+      console.log(e)
+      return res.status(400).json(createError(e.issues[0].message));
+    }
     try {
-      const jugador = await Jugador.findByPk(id_jugador);
-      if (!jugador) {
-        return res.status(404).json(createError("Jugador no encontrado"));
-      }
-      const torneo = await Torneo.findByPk(idTorneo);
+      const torneo = await Torneo.findOne({
+        where: { id: idTorneo },
+        attributes:  ["id"],
+        include: {model: Jugador, as: "jugadores", attributes: ["id"]},
+      });
+
       if (!torneo) {
         return res.status(404).json(createError("Torneo no encontrado"));
       }
-      console.log(torneo, jugador, idTorneo, id_jugador)
-      await torneo.addJugadores(Number(req.body.id_jugador));
+
+      if (inscripciones.jugadores.map((jugador) => jugador.id).includes(id_jugador)) {
+        return res.status(400).json(createError("Jugador ya inscrito"));
+      }
+
+      await torneo.addJugadores(id_jugador);
       res.json(torneo);
     } catch (error) {
       res.status(500).json(createError("Internal Server Error"));

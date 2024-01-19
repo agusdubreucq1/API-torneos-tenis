@@ -22,7 +22,6 @@ export const isLoggedIn = (req, res, next) => {
 };
 
 export const isAdmin = (req, res, next) => {
-  console.log(req.user);
   if (req.user.user.isAdmin) next();
   else {
     return res.status(403).json({ message: "No sos admin" });
