@@ -5,6 +5,7 @@ import Partido from "../../models/partido.js";
 import { User } from "../../models/user.js";
 import { jugadorSchema } from "../../schemas/jugador.js";
 import sequelize from "../../models/conexion.js";
+import Torneo from "../../models/torneo.js";
 
 export const jugador_controller = {
   get_jugadores: async (_req, res) => {
@@ -81,6 +82,21 @@ export const jugador_controller = {
         ]
       })
       res.json(partidos)
+    }catch(e){
+      console.log(e)
+      res.status(500).json(createError("Internal Server Error"))
+    }
+  },
+  get_inscripciones_by_jugador: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const torneos = await Jugador.findOne({
+        where:{
+          id: id
+        },
+        include: {model: Torneo , as: "torneos", through: {attributes: []}, attributes: ["id", "nombre", "lugar", "descripcion", "fecha", "estado", "categoria"]}
+      })
+      res.json(torneos)
     }catch(e){
       console.log(e)
       res.status(500).json(createError("Internal Server Error"))

@@ -70,7 +70,7 @@ export const inscripcion_controller = {
         return res.status(404).json(createError("Torneo no encontrado"));
       }
 
-      if (inscripciones.jugadores.map((jugador) => jugador.id).includes(id_jugador)) {
+      if (torneo.jugadores.map((jugador) => jugador.id).includes(id_jugador)) {
         return res.status(400).json(createError("Jugador ya inscrito"));
       }
 
