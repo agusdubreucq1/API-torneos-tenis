@@ -7,6 +7,7 @@ import { isAdmin, isAdminOfTorneo, isLoggedIn } from "../../../services/middlewa
 const router = Router();
 
 router.get("/", torneo_controller.get_torneos);
+router.get("/user", isLoggedIn, torneo_controller.get_torneos_by_admin);
 router.get("/:id", torneo_controller.get_torneo_by_id);
 
 router.post("/", isLoggedIn, isAdmin, torneo_controller.create_torneo);

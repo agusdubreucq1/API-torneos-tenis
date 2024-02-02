@@ -14,7 +14,7 @@ export const partido_controller = {
           torneoId: idTorneo,
         },
         attributes: {
-          exclude: ["torneoId", "pareja1", "pareja2", "updatedAt", "torneo_id"],
+          exclude: ["pareja1", "pareja2", "updatedAt", "torneo_id"],
         },
         include: [
           { model: Jugador, as: "Pareja1", include: { model: User, attributes: ["nombre", "apellido", "dni"] } }, // Usa el alias que definiste en la asociación
@@ -31,7 +31,7 @@ export const partido_controller = {
     }
   },
   get_partido_by_id: async (req, res) => {
-    const { idTorneo, id } = req.params;
+    const { id } = req.params;
     try {
       const partido = await Partido.findByPk(id);
       if (!partido) {

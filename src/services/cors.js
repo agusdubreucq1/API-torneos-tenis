@@ -17,7 +17,7 @@ export const corsOptions = (req, res)=>{
 	//si es del mismo origen la api y el fetch no devuelve el origin
 	if(ACCEPTED_ORIGINS.includes(origin) || !origin){
 		res.header('Access-Control-Allow-Origin',origin);
-		res.header('Access-Control-Allow-Methods','POST, PATCH, DELETE');
+		res.header('Access-Control-Allow-Methods','POST, PATCH, DELETE, PUT');
         res.header('Access-Control-Allow-Headers','*');
 	}
 	res.sendStatus(200)

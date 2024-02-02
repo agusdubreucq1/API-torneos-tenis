@@ -43,9 +43,9 @@ export const login_controller = {
     }
    
     try {
-      const user = await User.findOne({ where: { dni } });
+      const user = await User.findOne({ where: { dni }, include: { model: Jugador } });
       const token = sign({ user }, process.env.JWT_SECRET);
-      res.send({ message: "Inicio de sesión exitoso", user: { token, nombre: user.nombre, apellido: user.apellido, dni: user.dni, isAdmin: user.isAdmin } });
+      res.send({ message: "Inicio de sesión exitoso", user: { token, nombre: user.nombre, apellido: user.apellido, dni: user.dni, isAdmin: user.isAdmin, jugador: user.jugador } });
     } catch (e) {
       res.status(500).json(createError("Internal Server Error"));
       console.log(e)

@@ -6,7 +6,8 @@ import sequelize from './conexion.js';
 
 Partido.belongsTo(Torneo)
 
-Jugador.belongsTo(User)
+User.hasOne(Jugador, { foreignKey: "userId", optional: true });
+Jugador.belongsTo(User, { foreignKey: "userId" });
 
 Torneo.belongsToMany(User, { through: 'torneo_admin' })
 User.belongsToMany(Torneo, { through: 'torneo_admin' })

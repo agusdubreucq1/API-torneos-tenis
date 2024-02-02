@@ -34,8 +34,8 @@ export const partidoSchema = z.object({
     }, {message: "Jugador 2 no encontrado"}),
     orden: z.number({required_error: "Faltan campos obligatorios", invalid_type_error: "Faltan campos obligatorios"}).int('El valor debe ser un numero entero'),
     fecha: z.optional(z.coerce.date()),
-    ganador: z.optional(z.number({invalid_type_error: "Error en el campo: ganador"}).min(1, 'No es un ganador valido').max(2, 'No es un ganador valido')),
-    resultado: z.optional(z.string('El resultado debe ser un texto')),
+    ganador: z.optional(z.number({invalid_type_error: "Error en el campo: ganador"}).min(1, 'No es un ganador valido').max(2, 'No es un ganador valido')).nullable(),
+    resultado: z.optional(z.string('El resultado debe ser un texto')).nullable(),
 }, {required_error: "Faltan campos obligatorios"}).refine((data)=>{
     if((data.ganador && !data.resultado) || (!data.ganador && data.resultado)){
         return false

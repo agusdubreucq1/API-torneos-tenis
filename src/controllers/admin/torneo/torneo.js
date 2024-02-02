@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { ESTADO, createError } from "../../../../constantes.js";
 import sequelize from "../../../models/conexion.js";
 import Torneo from "../../../models/torneo.js";
@@ -10,6 +11,23 @@ export const torneo_controller = {
       const torneos = await Torneo.findAll();
       res.json(torneos);
     } catch (error) {
+      console.error(error);
+      res.status(500).json(createError("Error al obtener los torneos"));
+    }
+  },
+  get_torneos_by_admin: async (req, res) => {
+    try {
+      const torneos = await Torneo.findAll({
+        include: [
+          { model: User, through: { attributes: [] }, attributes: ["id", "nombre", "apellido", "dni"] },
+        ],
+        where: {
+          "$users.id$": [req.user.user.id],
+        }
+      })
+      res.json(torneos);
+    }
+    catch (error) {
       console.error(error);
       res.status(500).json(createError("Error al obtener los torneos"));
     }

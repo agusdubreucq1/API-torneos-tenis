@@ -50,6 +50,31 @@ export const inscripcion_controller = {
       res.status(500).json(createError("Error al obtener los jugadores no inscritos"));
     }
   },
+  create_inscripcion_by_jugador: async (req, res) => {
+    const { idTorneo } = req.params;
+    const id_jugador = req.user.user?.jugador?.id
+    try {
+      const torneo = await Torneo.findOne({
+        where: { id: idTorneo },
+        attributes:  ["id"],
+        include: {model: Jugador, as: "jugadores", attributes: ["id"]},
+      });
+
+      if (!torneo) {
+        return res.status(404).json(createError("Torneo no encontrado"));
+      }
+
+      if (torneo.jugadores.map((jugador) => jugador.id).includes(id_jugador)) {
+        return res.status(400).json(createError("Jugador ya inscrito"));
+      }
+
+      await torneo.addJugadores(id_jugador);
+      res.json(torneo);
+    } catch (error) {
+      res.status(500).json(createError("Internal Server Error"));
+      console.log(error);
+    }
+  },
   create_inscripcion: async (req, res) => {
     const { idTorneo } = req.params;
     const { id_jugador } = req.body;
