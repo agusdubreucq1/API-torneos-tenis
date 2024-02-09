@@ -69,6 +69,13 @@ export const torneo_controller = {
   },
   update_torneo: async (req, res) => {
     try{
+      torneoSchema.parse(req.body);
+    } catch (e) {
+      console.log(e)
+      return res.status(400).json(createError(e.issues[0].message));
+    }
+    
+    try{
       let torneo = await req.torneo.update(req.body);
       res.json(torneo);
     } catch (error) {

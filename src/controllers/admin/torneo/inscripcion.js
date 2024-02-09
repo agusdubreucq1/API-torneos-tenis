@@ -5,6 +5,7 @@ import Torneo from "../../../models/torneo.js";
 import { User } from "../../../models/user.js";
 import sequelize from "../../../models/conexion.js";
 import { inscripcionSchema } from "../../../schemas/inscripcion.js";
+import Partido from "../../../models/partido.js";
 
 export const inscripcion_controller = {
   get_inscripciones: async (req, res) => {
@@ -107,12 +108,43 @@ export const inscripcion_controller = {
     }
   },
   delete_inscripcion: async (req, res) => {
-    const { idTorneo } = req.params;
+    const { idTorneo} = req.params;
+
     try {
-      const torneo = await Torneo.findByPk(idTorneo);
-      torneo.removeJugador(req.body.id_jugador);
-      res.json(inscripcion);
+      const torneo = await Torneo.findByPk(idTorneo,{
+        include: {model: Jugador, as: "jugadores", attributes: ["id"]},
+      });
+      if(req.user.user.isAdmin){
+        res.status(403).json(createError("No eres un jugador"));
+        return
+      }
+      
+      const jugador = await Jugador.findByPk(req.user.user.jugador?.id);
+      
+      if(jugador === null || torneo === null) {
+        return res.status(404).json(createError("Jugador o torneo no encontrado"));
+      }
+      const partidos = await Partido.findAll({
+        where: {
+          torneoId: idTorneo,
+          [Op.or]: [
+            {
+              pareja1: jugador.id,
+            },
+            {
+              pareja2: jugador.id
+            }
+          ]
+        }
+      })
+      if(partidos.length > 0){
+        return res.status(400).json(createError("No se puede eliminar al jugador porque tiene partidos creados"));
+      }
+      
+      torneo.removeJugadores(jugador);
+      res.json(torneo);
     } catch (error) {
+      console.log(error)
       res.status(500).json(createError("Internal Server Error"));
     }
   },
