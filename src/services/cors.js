@@ -1,6 +1,7 @@
 const ACCEPTED_ORIGINS = [
 	'http://localhost:5173',
-	'https://mistorneos.com'
+	'https://mistorneos.com',
+	'https://front-torneos-tenis.vercel.app'
 ]
 
 export const cors = (req, res, next)=>{

@@ -26,11 +26,7 @@ Partido.belongsTo(Jugador, {
     targetKey: "id",
     as: "Pareja2"
 })
-// Partido.belongsTo(Jugador, {
-//     foreignKey: "ganador",
-//     targetKey: "id",
-//     as: "Ganador"
-// })
+
 
 
 const config_db = async ()=>{
