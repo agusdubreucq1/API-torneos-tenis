@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import { config } from 'dotenv';
+import  mysql from 'mysql2'
 config();
 
 
@@ -14,6 +15,7 @@ const sequelize = new Sequelize(
     pass,
     {
         dialect: 'mysql',
+        dialectModule: mysql,
         host: host,
         logging: false
     }
